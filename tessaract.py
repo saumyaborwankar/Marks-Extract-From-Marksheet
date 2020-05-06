@@ -6,15 +6,9 @@ from pytesseract import Output
 import re
 import os
 pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesseract.exe' 
-'''
-#im=Image.open("D:/My stuff/Mavoix internship/ml-dl-ds/assignment_v3/data-set/ms-1.jpg")
-im=cv2.imread('D:/My stuff/Mavoix internship/ml-dl-ds/assignment_v3/data-set/ms-4.jpg',0)
-#im=im.astype('uint8')
-#grayImage = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
-text=pytesseract.image_to_data(im,lang='eng', output_type=Output.DICT)
-'''
-output_dir='D:/My stuff/Mavoix internship/tesarract imp/output/'
-dataset_dir='D:/My stuff/Mavoix internship/ml-dl-ds/assignment_v3/data-set/'
+
+output_dir='output/'
+dataset_dir='dataset/'
 def findScore(filename):
     im=cv2.imread(os.path.join(output_dir,filename),0)
     #im=im.astype('uint8')
@@ -43,8 +37,8 @@ def findScore(filename):
         except:
             continue
 
-output_dir='D:/My stuff/Mavoix internship/tesarract imp/output/'
-dataset_dir='D:/My stuff/Mavoix internship/ml-dl-ds/assignment_v3/data-set/'
+output_dir='output/'
+dataset_dir='dataset/'
 file_names=[]
 finalbox=[]
 name=[]
@@ -62,7 +56,7 @@ for i in range(len(file_names)):
     
     for i in range(n_boxes):
         (x, y, w, h) = (text['left'][i], text['top'][i], text['width'][i], text['height'][i])
-        #cv2.rectangle(im, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
         box.append([x,y,w,h])
 
         
@@ -76,10 +70,9 @@ for i in range(len(file_names)):
             subject_name.append(text['text'][i])    
     count=1
     for i in (finalbox):
-        #(x, y, w, h) = (text['left'][i], text['top'][i], text['width'][i], text['height'][i])
+
         x,y,w,h=i
-        #cv2.rectangle(im, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        #croped=im[y:y+h,x:(im.shape[1])]
+
         croped=im[y-5:y+h,x:im.shape[1]]
         cv2.imwrite(os.path.join(output_dir,'{}_{}.png'.format((subject_name[count-1]).lower(),file[0][0:4])),croped)
         count+=1
@@ -88,11 +81,14 @@ dict_for_marks={}
 for subdir,dirs,file2 in os.walk(output_dir):
     for i in file2:
         print(i)
-        #dict_for_marks[file2[0][0:4]]={'chem':findScore(i)}
+
         s.append(findScore(i))
         dict_for_marks[i]=findScore(i)
-        #print(count)
-    #box.append([x,y,w,h])
-#cv2.imshow('img', im)
-#cv2.waitKey(1000)
-#filename.append(output_dir)
+
+sum=sum(int(dict_for_marks.values()))
+if (sum/3) > 90:
+    print('Class Alpha')
+elif (sum/3) < 90 and (sum/3) > 80::
+    print('Class Beta')
+elif (sum/3) < 80 and (sum/3) > 70::
+    print('Class Gamma')
